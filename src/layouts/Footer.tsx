@@ -1,12 +1,19 @@
 import { Link } from "react-router-dom";
+
 export default function Footer() {
   return (
-    <div className="border-primary sticked bottom-0 left-0 flex w-full items-center justify-center border-t py-4">
-      <div className="container mx-auto flex flex-1 items-center justify-between">
-        <Link to="/" className="text-primary font-bold tracking-tight">
+    <div className="sticked bottom-0 left-0 flex w-full items-center justify-center bg-primary py-4">
+      <div className="container mx-auto grid items-center gap-2 md:grid-cols-2">
+        <Link
+          to="/"
+          className="font-bold tracking-tight text-white  hover:text-slate-600"
+        >
           Food Ordering Platform
         </Link>
-        <Link to="/" className="text-primary">
+        <Link
+          to="/"
+          className="justify-self-start text-white hover:text-slate-600 md:justify-self-end"
+        >
           @about us
         </Link>
       </div>
