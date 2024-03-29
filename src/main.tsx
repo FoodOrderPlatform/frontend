@@ -1,10 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
 import "./global.css";
 
 // pages
 import RootLayout from "./RootLayout";
+import HomePage from "./pages/HomePage";
 
 const router = createBrowserRouter([
   {
@@ -13,11 +18,11 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <p>HOME PAPE</p>,
+        element: <HomePage />,
       },
       {
         path: "*", //handle user go to wrong path
-        element: <p>HOME PAPE</p>,
+        element: <Navigate to="/" />,
       },
       {
         path: "user-profile",
