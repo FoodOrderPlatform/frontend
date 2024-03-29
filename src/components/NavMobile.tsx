@@ -9,12 +9,12 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { CircleUserRound, Menu } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function NavMobile() {
-  const { loginWithRedirect } = useAuth0();
+  const { loginWithRedirect, isAuthenticated, logout, user } = useAuth0();
   return (
     <div>
       <Sheet>
@@ -23,20 +23,37 @@ export default function NavMobile() {
         </SheetTrigger>
 
         <SheetContent className="space-y-4">
-          <SheetHeader>
-            <SheetTitle>Welcome to Food Ordering Platform</SheetTitle>
-            <SheetDescription>Login to discorvery our platfom</SheetDescription>
-          </SheetHeader>
+          {isAuthenticated ? (
+            <SheetHeader>
+              <SheetTitle className="flex items-center gap-x-2">
+                <CircleUserRound className="text-primary" />
+                <span className="hover-primary font-bold">{user?.email}</span>
+              </SheetTitle>
+            </SheetHeader>
+          ) : (
+            <SheetHeader>
+              <SheetTitle>Welcome to Food Ordering Platform</SheetTitle>
+              <SheetDescription>
+                Login to discorvery our platfom
+              </SheetDescription>
+            </SheetHeader>
+          )}
+
           <Separator />
           <SheetFooter>
             <SheetClose asChild>
-              <Button
-                type="submit"
-                className="w-full"
-                onClick={async () => await loginWithRedirect()}
-              >
-                Log in
-              </Button>
+              {isAuthenticated ? (
+                <Button className="w-full" onClick={() => logout()}>
+                  Log out
+                </Button>
+              ) : (
+                <Button
+                  className="w-full"
+                  onClick={async () => await loginWithRedirect()}
+                >
+                  Log in
+                </Button>
+              )}
             </SheetClose>
           </SheetFooter>
         </SheetContent>
