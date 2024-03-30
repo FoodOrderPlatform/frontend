@@ -10,7 +10,7 @@ import "./global.css";
 // pages
 import RootLayout from "./RootLayout";
 import HomePage from "./pages/HomePage";
-
+import AuthCallbackPage from "./pages/AuthCallbackPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "*", //handle user go to wrong path
         element: <Navigate to="/" />,
+      },
+      {
+        path: "auth-callback",
+        element: <AuthCallbackPage />,
       },
       {
         path: "user-profile",
