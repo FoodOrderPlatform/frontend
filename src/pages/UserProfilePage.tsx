@@ -1,11 +1,24 @@
-import { useUpdateUser } from "@/api/UserApi";
+import { useGetUser, useUpdateUser } from "@/api/UserApi";
 import UserProfile from "@/forms/user-profile-form/UserProfile";
 
 export default function UserProfilePage() {
-  const { updateUser, isLoading } = useUpdateUser();
+  const { currentUser, isLoading: isGetLoading } = useGetUser();
+  const { updateUser, isLoading: isUpdateLoading } = useUpdateUser();
+
+  if (isGetLoading) {
+    return <span>is loading ...</span>;
+  }
+
+  if (!currentUser) {
+    return <span>Uanable to load user profile.</span>;
+  }
   return (
     <>
-      <UserProfile onSave={updateUser} isLoading={isLoading} />
+      <UserProfile
+        currentUser={currentUser}
+        onSave={updateUser}
+        isLoading={isUpdateLoading}
+      />
     </>
   );
 }
