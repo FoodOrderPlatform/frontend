@@ -11,6 +11,8 @@ import "./global.css";
 import RootLayout from "./RootLayout";
 import HomePage from "./pages/HomePage";
 import AuthCallbackPage from "./pages/AuthCallbackPage";
+import UserProfilePage from "./pages/UserProfilePage";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -30,7 +32,7 @@ const router = createBrowserRouter([
       },
       {
         path: "user-profile",
-        element: <p>USER PROFILE PAGE</p>,
+        element: <UserProfilePage />,
       },
     ],
   },
