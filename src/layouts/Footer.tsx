@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <div className="sticked bottom-0 left-0 flex w-full items-center justify-center bg-primary py-4">
+    <div className={`flex w-full items-center justify-center bg-primary py-4`}>
       <div className="container mx-auto grid items-center gap-2 md:grid-cols-2">
         <Link
           to="/"

@@ -12,6 +12,7 @@ import RootLayout from "./RootLayout";
 import HomePage from "./pages/HomePage";
 import AuthCallbackPage from "./pages/AuthCallbackPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -32,7 +33,13 @@ const router = createBrowserRouter([
       },
       {
         path: "user-profile",
-        element: <UserProfilePage />,
+        element: <ProtectedRoute />,
+        children: [
+          {
+            index: true,
+            element: <UserProfilePage />,
+          },
+        ],
       },
     ],
   },
