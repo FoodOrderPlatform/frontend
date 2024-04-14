@@ -24,7 +24,11 @@ export default function MenuSection() {
           render={() => (
             <FormItem className="flex flex-col gap-2">
               {fields.map((_, index) => (
-                <MenuItemInput index={index} removeItem={() => remove(index)} />
+                <MenuItemInput
+                  key={index}
+                  index={index}
+                  removeItem={() => remove(index)}
+                />
               ))}
             </FormItem>
           )}

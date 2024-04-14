@@ -26,7 +26,7 @@ export default function DetailsSection() {
           <FormItem>
             <FormLabel>Name</FormLabel>
             <FormControl>
-              <Input {...field} className=" bg-white" />
+              <Input {...field} className="bg-white" />
             </FormControl>
             <FormMessage />
           </FormItem>
