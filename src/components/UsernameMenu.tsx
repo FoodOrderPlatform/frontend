@@ -24,6 +24,9 @@ export default function UsernameMenu() {
         <DropdownMenuItem className="text-md p-1 font-semibold hover:bg-slate-200  ">
           <Link to="/user-profile">User profile</Link>
         </DropdownMenuItem>
+        <DropdownMenuItem className="text-md p-1 font-semibold hover:bg-slate-200  ">
+          <Link to="/manage-restaurant">Manage restaurant</Link>
+        </DropdownMenuItem>
         <Separator />
         <DropdownMenuItem>
           <Button className="flex w-full" onClick={() => logout()}>

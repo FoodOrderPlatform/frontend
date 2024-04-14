@@ -12,6 +12,12 @@ export default function MobileNavLink() {
       >
         User profile
       </Link>
+      <Link
+        to="manage-restaurant"
+        className="w-full p-2 text-xl hover:bg-slate-200 hover:text-primary"
+      >
+        Manage restaurant
+      </Link>
       <Button className="w-full" onClick={() => logout()}>
         Log out
       </Button>
