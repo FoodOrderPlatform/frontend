@@ -6,7 +6,7 @@ export default function UserProfilePage() {
   const { updateUser, isLoading: isUpdateLoading } = useUpdateUser();
 
   if (isGetLoading) {
-    return <span>is loading ...</span>;
+    return null; // add spiner loading later
   }
 
   if (!currentUser) {
