@@ -12,35 +12,42 @@ import { Button } from "@/components/ui/button";
 import { Restaurant } from "@/types";
 import { useEffect } from "react";
 
-const formSchema = z.object({
-  restaurantName: z.string({
-    required_error: "restaurant name is required field",
-  }),
-  city: z.string({
-    required_error: "city is required field",
-  }),
-  country: z.string({
-    required_error: "country is required field",
-  }),
-  deliveryPrice: z.coerce.number({
-    required_error: "delivery price is required field",
-    invalid_type_error: "must be a positive number",
-  }),
-  estimatedDeliveryTime: z.coerce.number({
-    required_error: "estimated delivery time is required field",
-    invalid_type_error: "must be a positive number",
-  }),
-  cuisines: z.array(z.string()).nonempty({
-    message: "please select at least one item",
-  }),
-  menuItems: z.array(
-    z.object({
-      name: z.string().min(1, "name is required"),
-      price: z.coerce.number().min(1, "price is required"),
+const formSchema = z
+  .object({
+    restaurantName: z.string({
+      required_error: "restaurant name is required field",
     }),
-  ),
-  imageFile: z.instanceof(File, { message: "image is required field" }),
-});
+    city: z.string({
+      required_error: "city is required field",
+    }),
+    country: z.string({
+      required_error: "country is required field",
+    }),
+    deliveryPrice: z.coerce.number({
+      required_error: "delivery price is required field",
+      invalid_type_error: "must be a positive number",
+    }),
+    estimatedDeliveryTime: z.coerce.number({
+      required_error: "estimated delivery time is required field",
+      invalid_type_error: "must be a positive number",
+    }),
+    cuisines: z.array(z.string()).nonempty({
+      message: "please select at least one item",
+    }),
+    menuItems: z.array(
+      z.object({
+        name: z.string().min(1, "name is required"),
+        price: z.coerce.number().min(1, "price is required"),
+      }),
+    ),
+    imageUrl: z.string().optional(),
+    imageFile: z
+      .instanceof(File, { message: "image is required field" })
+      .optional(),
+  })
+  .refine((data) => data.imageUrl || data.imageFile, {
+    message: "Either image Url or image File must be provided",
+  });
 
 type restaurantFormData = z.infer<typeof formSchema>;
 
@@ -57,7 +64,6 @@ export default function ManageRestaurantForm({
   const form = useForm<restaurantFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      city: restaurant?.city,
       cuisines: [],
       menuItems: [
         {
@@ -115,8 +121,9 @@ export default function ManageRestaurantForm({
         (menuItem.price * 100).toString(),
       );
     });
-
-    formData.append("imageFile", formDataJson.imageFile);
+    if (formDataJson.imageFile) {
+      formData.append("imageFile", formDataJson.imageFile);
+    }
 
     onSave(formData);
   };

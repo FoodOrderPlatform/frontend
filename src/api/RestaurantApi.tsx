@@ -6,7 +6,7 @@ import { toast } from "sonner";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const useGetRestaurant = () => {
   const { getAccessTokenSilently } = useAuth0();
-  const getRestaurantRequest = async () => {
+  const getRestaurantRequest = async (): Promise<Restaurant> => {
     const access_token = await getAccessTokenSilently();
     const response = await fetch(`${API_BASE_URL}/api/restaurant`, {
       method: "GET",
@@ -63,10 +63,48 @@ export const useCreateRestaurant = () => {
     toast.success("Restaurant created!");
   }
   if (error) {
-    toast.error("Unable to update restaurant");
+    toast.error("Unable to create restaurant");
   }
   return {
     createRestaurant,
+    isLoading,
+  };
+};
+
+export const useUpdateRestaurant = () => {
+  const { getAccessTokenSilently } = useAuth0();
+  const updateRestaurantRequest = async (
+    restaurantFormData: FormData,
+  ): Promise<Restaurant> => {
+    const access_token = await getAccessTokenSilently();
+    const response = await fetch(`${API_BASE_URL}/api/restaurant`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+      body: restaurantFormData,
+    });
+    if (!response.ok) {
+      throw new Error("Failed to update restaurant");
+    }
+    return response.json();
+  };
+
+  const {
+    mutate: updateRestaurant,
+    isLoading,
+    isSuccess,
+    error,
+  } = useMutation(updateRestaurantRequest);
+
+  if (error) {
+    toast.error(error.toString());
+  }
+  if (isSuccess) {
+    toast.success("Success to update restaurant");
+  }
+  return {
+    updateRestaurant,
     isLoading,
   };
 };
