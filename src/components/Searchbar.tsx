@@ -5,6 +5,7 @@ import { Form, FormControl, FormField, FormItem } from "./ui/form";
 import { Search } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   searchQuery: z.string({
@@ -15,15 +16,30 @@ const formSchema = z.object({
 export type SearchForm = z.infer<typeof formSchema>;
 
 type Props = {
+  searchQuery: string;
   onSubmit: (formData: SearchForm) => void;
   placeholder: string;
   onReset?: () => void;
 };
 
-export default function SearchBar({ onSubmit, onReset, placeholder }: Props) {
+export default function SearchBar({
+  onSubmit,
+  onReset,
+  placeholder,
+  searchQuery,
+}: Props) {
   const form = useForm<SearchForm>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      searchQuery,
+    },
   });
+
+  useEffect(() => {
+    form.reset({
+      searchQuery,
+    });
+  }, [form, searchQuery]);
 
   const handleReset = () => {
     form.reset({
@@ -38,7 +54,7 @@ export default function SearchBar({ onSubmit, onReset, placeholder }: Props) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={`mx-5 flex flex-1 flex-row items-center justify-between gap-2 rounded-full border-2 p-2 ${form.formState.errors.searchQuery && "border-red-700"}`}
+        className={`flex flex-row items-center justify-between gap-2 rounded-full border-2 p-2 ${form.formState.errors.searchQuery && "border-red-700"}`}
       >
         <Search className="hidden text-primary md:block" />
 
@@ -58,16 +74,16 @@ export default function SearchBar({ onSubmit, onReset, placeholder }: Props) {
             </FormItem>
           )}
         />
-        {form.formState.isDirty && (
-          <Button
-            onClick={handleReset}
-            variant="outline"
-            type="button"
-            className="rounded-full"
-          >
-            Clear
-          </Button>
-        )}
+
+        <Button
+          onClick={handleReset}
+          variant="outline"
+          type="button"
+          className="rounded-full"
+        >
+          Reset
+        </Button>
+
         <Button type="submit" className="rounded-full">
           Search
         </Button>
