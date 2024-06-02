@@ -1,3 +1,7 @@
+import {
+  CheckoutSessioRequest,
+  useCreateCheckoutSession,
+} from "@/api/OrderApi";
 import { useGetRestautant } from "@/api/RestauransApi";
 import CheckoutButton from "@/components/CheckoutButton";
 import MenuItem from "@/components/MenuItem";
@@ -20,13 +24,36 @@ export type CartItem = {
 export default function DetailPage() {
   const { restaurantId } = useParams();
   const { restaurant, isLoading } = useGetRestautant(restaurantId);
+  const { createCheckoutSession, isLoading: isCheckoutLoading } =
+    useCreateCheckoutSession();
+
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     const storedCartItems = sessionStorage.getItem(`cartItems-${restaurantId}`);
     return storedCartItems ? JSON.parse(storedCartItems) : [];
   });
 
-  const onCheckoutHandler = (userFormData: UserFormData) => {
-    console.log(userFormData);
+  const onCheckoutHandler = async (userFormData: UserFormData) => {
+    if (!restaurant) {
+      return;
+    }
+
+    const checkoutData: CheckoutSessioRequest = {
+      cartItems: cartItems.map((item) => ({
+        menuItemId: item._id,
+        name: item.name,
+        quantity: item.quantity.toString(),
+      })),
+      restaurantId: restaurant._id.toString(),
+      deliveryDetails: {
+        name: userFormData.name,
+        address: userFormData.address,
+        city: userFormData.city,
+        email: userFormData.email as string,
+      },
+    };
+
+    const data = await createCheckoutSession(checkoutData);
+    window.location.href = data.url;
   };
 
   const addToCartItemsHandler = (menuItem: MenuItemType) => {
@@ -67,6 +94,7 @@ export default function DetailPage() {
       });
     }
   };
+
   const removeCartItemsHandler = (cartItemId: string) => {
     setCartItems((prevState) => {
       const updatedItems = prevState.filter((item) => item._id !== cartItemId);
@@ -113,6 +141,7 @@ export default function DetailPage() {
               <CheckoutButton
                 disable={cartItems.length === 0}
                 onCheckout={onCheckoutHandler}
+                isLoading={isCheckoutLoading}
               />
             </CardFooter>
           </Card>
