@@ -5,6 +5,7 @@ import OrderSummary from "@/components/OrderSummary";
 import RestaurantInfo from "@/components/RestaurantInfo";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Card, CardFooter } from "@/components/ui/card";
+import { UserFormData } from "@/forms/user-profile-form/UserProfile";
 import { MenuItem as MenuItemType } from "@/types";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -24,9 +25,10 @@ export default function DetailPage() {
     return storedCartItems ? JSON.parse(storedCartItems) : [];
   });
 
-  if (isLoading || !restaurant) {
-    return <p>is loading ...</p>;
-  }
+  const onCheckoutHandler = (userFormData: UserFormData) => {
+    console.log(userFormData);
+  };
+
   const addToCartItemsHandler = (menuItem: MenuItemType) => {
     const currentIndexItem = cartItems.findIndex(
       (item) => item._id === menuItem._id,
@@ -75,6 +77,11 @@ export default function DetailPage() {
       return updatedItems;
     });
   };
+
+  if (isLoading || !restaurant) {
+    return <p>is loading ...</p>;
+  }
+
   return (
     <div className="my-8 flex flex-col gap-10 px-4">
       <AspectRatio ratio={16 / 5}>
@@ -88,7 +95,11 @@ export default function DetailPage() {
           <RestaurantInfo restaurant={restaurant} />
           <span className="text-2xl font-bold tracking-tight">Menu</span>
           {restaurant.menuItems.map((item) => (
-            <MenuItem menuItem={item} addToCart={addToCartItemsHandler} />
+            <MenuItem
+              key={item._id}
+              menuItem={item}
+              addToCart={addToCartItemsHandler}
+            />
           ))}
         </div>
         <div>
@@ -99,7 +110,10 @@ export default function DetailPage() {
               removeItem={removeCartItemsHandler}
             />
             <CardFooter>
-              <CheckoutButton />
+              <CheckoutButton
+                disable={cartItems.length === 0}
+                onCheckout={onCheckoutHandler}
+              />
             </CardFooter>
           </Card>
         </div>
