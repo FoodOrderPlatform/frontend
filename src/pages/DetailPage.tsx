@@ -33,6 +33,8 @@ export default function DetailPage() {
   });
 
   const onCheckoutHandler = async (userFormData: UserFormData) => {
+    console.log(userFormData);
+
     if (!restaurant) {
       return;
     }
@@ -115,7 +117,7 @@ export default function DetailPage() {
       <AspectRatio ratio={16 / 5}>
         <img
           src={restaurant.imageUrl}
-          className="h-full w-full rounded-md object-cover"
+          className="z-10 h-full w-full rounded-md object-cover"
         />
       </AspectRatio>
       <div className="grid gap-5 md:grid-cols-[4fr_2fr] md:px-32">

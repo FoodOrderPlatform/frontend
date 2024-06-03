@@ -20,7 +20,7 @@ export default function UsernameMenu() {
           {user?.email}
         </span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="flex min-w-80 flex-1 flex-col gap-y-2 rounded-md bg-white p-4 text-center">
+      <DropdownMenuContent className="z-50 flex min-w-80 flex-1 flex-col gap-y-2 rounded-md bg-white p-4 text-center">
         <DropdownMenuItem className="text-md p-1 font-semibold hover:bg-slate-200  ">
           <Link to="/user-profile">User profile</Link>
         </DropdownMenuItem>

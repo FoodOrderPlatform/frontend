@@ -16,6 +16,7 @@ import ProtectedRoute from "./auth/ProtectedRoute";
 import ManageRestaurantPage from "./pages/ManageRestaurantPage";
 import SearchPage from "./pages/SearchPage";
 import DetailPage from "./pages/DetailPage";
+import OrderStatusPage from "./pages/OrderStatusPage";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,16 @@ const router = createBrowserRouter([
       {
         path: "auth-callback",
         element: <AuthCallbackPage />,
+      },
+      {
+        path: "order-status",
+        element: <ProtectedRoute />,
+        children: [
+          {
+            index: true,
+            element: <OrderStatusPage />,
+          },
+        ],
       },
       {
         path: "user-profile",

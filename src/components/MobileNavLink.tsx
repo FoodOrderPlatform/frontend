@@ -18,6 +18,12 @@ export default function MobileNavLink() {
       >
         Manage restaurant
       </Link>
+      <Link
+        to="order-status"
+        className="w-full p-2 text-xl hover:bg-slate-200 hover:text-primary"
+      >
+        Order status
+      </Link>
       <Button className="w-full" onClick={() => logout()}>
         Log out
       </Button>
