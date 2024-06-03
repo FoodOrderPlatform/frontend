@@ -1,4 +1,4 @@
-import { Order } from "@/types";
+import { Order, OrderStatus } from "@/types";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -12,12 +12,40 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { ORDER_STATUS } from "@/config/order-status-config";
+import { useUpdateRestaurantOrderState } from "@/api/RestaurantApi";
+import { useEffect, useState } from "react";
 
 type Props = {
   order: Order;
 };
 
 const OrderCardDetails = ({ order }: Props) => {
+  const { updatedOrder, isLoading } = useUpdateRestaurantOrderState();
+  const [status, setStatus] = useState<OrderStatus>(order.status);
+
+  useEffect(() => {
+    setStatus(order.status);
+  }, [order.status]);
+
+  const onUpdateStatusHandler = async (newStatus: OrderStatus) => {
+    updatedOrder({
+      orderId: order._id,
+      newStatus,
+    });
+    setStatus(newStatus);
+  };
+
+  const getTimeFormated = () => {
+    const createTime = new Date(order.createdAt);
+
+    const minutes = createTime.getMinutes();
+    const hours = createTime.getHours();
+
+    const paddedMinites = minutes < 10 ? `0${minutes}` : minutes;
+
+    return `${hours}:${paddedMinites}`;
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -35,10 +63,8 @@ const OrderCardDetails = ({ order }: Props) => {
             </span>
           </span>
           <span>
-            Time:
-            <span className="ml-2 font-normal">
-              {order.deliveryDetails.name}
-            </span>
+            Time created:
+            <span className="ml-2 font-normal">{getTimeFormated()}</span>
           </span>
           <span>
             Total Cost:
@@ -63,7 +89,13 @@ const OrderCardDetails = ({ order }: Props) => {
           <Label htmlFor={`status-${order._id}`}>
             What is status of this order?
           </Label>
-          <Select>
+          <Select
+            disabled={isLoading}
+            value={status}
+            onValueChange={(value) =>
+              onUpdateStatusHandler(value as OrderStatus)
+            }
+          >
             <SelectTrigger id={`status-${order._id}`}>
               <SelectValue placeholder="Status" />
             </SelectTrigger>

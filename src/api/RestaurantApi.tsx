@@ -1,4 +1,4 @@
-import { Order, Restaurant } from "@/types";
+import { Order, OrderStatus, Restaurant } from "@/types";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useMutation, useQuery } from "react-query";
 import { toast } from "sonner";
@@ -135,6 +135,60 @@ export const useGetRestaurantOrder = () => {
 
   return {
     orders,
+    isLoading,
+  };
+};
+
+type UpdateRestaurantOrderRequest = {
+  orderId: string;
+  newStatus: OrderStatus;
+};
+export const useUpdateRestaurantOrderState = () => {
+  const { getAccessTokenSilently } = useAuth0();
+
+  const updateRestaurantOrder = async (
+    updateRestaurantOrderRequest: UpdateRestaurantOrderRequest,
+  ) => {
+    const accessToken = await getAccessTokenSilently();
+
+    const response = await fetch(
+      `${API_BASE_URL}/api/restaurant/order/${updateRestaurantOrderRequest.orderId}/status`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: updateRestaurantOrderRequest.newStatus,
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error("Faile to update order status");
+    }
+
+    return response.json();
+  };
+
+  const {
+    mutateAsync: updatedOrder,
+    isLoading,
+    isError,
+    isSuccess,
+  } = useMutation(updateRestaurantOrder);
+
+  if (isError) {
+    toast.error("Unable to update order");
+  }
+
+  if (isSuccess) {
+    toast.success("Order updated");
+  }
+
+  return {
+    updatedOrder,
     isLoading,
   };
 };
